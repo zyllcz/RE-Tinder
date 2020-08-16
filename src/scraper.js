@@ -3,7 +3,9 @@
 
     //const url = 'http://v3.torontomls.net/Live/Pages/Public/Link.aspx?Key=00df01ca43e3426d91487697c76755b8&App=TREB#C4835471'; //multilist condo
     const url = 'http://v3.torontomls.net/Live/Pages/Public/Link.aspx?Key=a73e6e2779a54a9d8112dce842541694&App=TREB' //single listing house
-    
+
+    const getListingData = (url, callback) => {
+
     puppeteer
       .launch()
       .then(browser => browser.newPage())
@@ -15,28 +17,12 @@
       .then(html => {
         const $ = cheerio.load(html);
 
-        //#C4835471 > span
-
-        //$([data-deferred-loaded]) gets the reports on the page
-        // $("div.formitem.form.viewform > div > div:nth-child(1) > div > div:nth-child(2) > div:nth-child(1) > div > div:nth-child(1) > div:nth-child(1) > div > div > span:nth-child(1) > span")
-        // .each(function() {
-        //   items.push({
-        //     value: $(this).text()
-        //   });
-        // });
-
-        // $("div.formitem.form.viewform > div > div:nth-child(1) > div > div:nth-child(2) > div:nth-child(1) > div > div:nth-child(2) > div > span:nth-child(1) > span")
-        // .each(function() {
-        //   items.push({
-        //     value: $(this).text()
-        //   });
-        // });
-        //console.log(items);
-
-        const urlElems = $('div.formitem.form.viewform')
+        const urlElems = $('div.formitem.form.viewform') //div.formitem.form.viewform seems to be the common container for each listing report
           for (let i = 0; i < urlElems.length; i++) {
             const listingData = {
-            address : $(urlElems[i]).find('div > div:nth-child(1) > div > div:nth-child(2) > div:nth-child(1) > div > div:nth-child(1) > div:nth-child(1) > div > div > span:nth-child(1) > span').text(),
+              //since there's no label for address need to find it by exact position
+            address : $(urlElems[i]).find('div > div:nth-child(1) > div > div:nth-child(2) > div:nth-child(1) > div > div:nth-child(1) > div:nth-child(1) > div > div > span:nth-child(1) > span').text(), 
+              //for data with labels we find the exact label string then get the next element for the label data
             price : $(urlElems[i]).find('label').filter(function() {
               return $(this).text().trim() === 'List:';
             }).next().text(),
@@ -49,6 +35,7 @@
             MLS : $(urlElems[i]).find('label').filter(function() {
               return $(this).text().trim() === 'MLS#:';
             }).next().text(),
+            //there are different data and formats dending on the style of listing (detached, condo, etc... need to build cases for each type of style)
             style : $(urlElems[i]).find('div > div:nth-child(1) > div > div:nth-child(2) > div:nth-child(5) > div.formitem.formgroup.horizontal > div:nth-child(1) > span:nth-child(1) > span').text(),
             acre : $(urlElems[i]).find('div > div:nth-child(1) > div > div:nth-child(2) > div:nth-child(5) > div.formitem.formgroup.vertical > span:nth-child(4) > span').text(),
             Rms : $(urlElems[i]).find('label').filter(function() {
@@ -62,9 +49,30 @@
             }).next().text()
           }
 
-            const images = JSON.parse($(urlElems[i]).find('img').attr('data-multi-photos'))
+          //TODO
+          //populate condo depended data
+
+          //populate detached depended data
+          
+          //populate for sale data
+
+          //populate for rent data
+            const listingImages = JSON.parse($(urlElems[i]).find('img').attr('data-multi-photos'))
             
-            console.log(listingData, images)
+            //console.log(listingData, images)
+
+            callback(undefined, listingData, listingImages)
         }
       })
-      .catch(console.error);
+      .catch((error)=> {
+        callback("unable to get response from url" + error.text(), undefined, undefined)
+      });
+
+    }
+
+    getListingData(url, (error,listingData, listingImages)=>{
+        console.log(error);
+        console.log(listingData,listingImages)
+    })
+
+    
