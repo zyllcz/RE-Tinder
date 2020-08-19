@@ -53,6 +53,8 @@ return new Promise((resolve, reject)=>{
         }
 
         //TODO
+        //check API first, see if this data is in there already.
+        
         //populate condo depended data
 
         //populate detached depended data
@@ -91,7 +93,7 @@ const saveListing = async (url) => {
     console.log(e)
   }
 }
-//saveListing(url)
+
 
 //todo: call save listing for each link in mailbox
 //stub

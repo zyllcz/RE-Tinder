@@ -1,6 +1,9 @@
 const mongoose = require('mongoose')
+const dotenv = require('dotenv')
+dotenv.config()
 
-mongoose.connect('mongodb+srv://zyllcz:WQjlRu5j2jJGPyy@mzcluster.vuopj.mongodb.net/retinder?retryWrites=true&w=majority',
+const connectString = process.env.DBConnectString
+mongoose.connect(connectString,
 {useNewUrlParser: true, 
     useCreateIndex: true,
     useUnifiedTopology: true,
