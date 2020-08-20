@@ -4,8 +4,8 @@ require('./db/mongoose')
 const Listing = require('./models/listing');
 const { model } = require('./models/listing');
 
-//const url = 'http://v3.torontomls.net/Live/Pages/Public/Link.aspx?Key=00df01ca43e3426d91487697c76755b8&App=TREB#C4835471'; //multilist condo
-const url = 'http://v3.torontomls.net/Live/Pages/Public/Link.aspx?Key=a73e6e2779a54a9d8112dce842541694&App=TREB' //single listing house
+const url1 = 'http://v3.torontomls.net/Live/Pages/Public/Link.aspx?Key=00df01ca43e3426d91487697c76755b8&App=TREB#C4835471'; //multilist condo
+const url2 = 'http://v3.torontomls.net/Live/Pages/Public/Link.aspx?Key=a73e6e2779a54a9d8112dce842541694&App=TREB' //single listing house
 
 const getListingData = (url) => {
 return new Promise((resolve, reject)=>{
@@ -84,10 +84,10 @@ const saveListing = async (url) => {
     const {listingData, listingImages} = listingPageData
     const listing = await Listing.findOne({url})
     if (!listing){
-      const newListing = new Listing({url, listingData, listingImages: listingImages['multi-photos']})
+      const newListing = new Listing({url, listingData, listingImages: listingImages['multi-photos'], MLS:listingData.MLS})
       await newListing.save()
     }else{
-      await listing.updateOne({listingData, listingImages: listingImages['multi-photos']})
+      await listing.updateOne({listingData, listingImages: listingImages['multi-photos'], MLS:listingData.MLS})
     }
   } catch (e) {
     console.log(e)
@@ -98,7 +98,7 @@ const saveListing = async (url) => {
 //todo: call save listing for each link in mailbox
 //stub
 const scrapingJob = () =>{ 
-    saveListing(url)
+    saveListing(url1)
     console.log('scraping job complete')
 }
 

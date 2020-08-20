@@ -7,11 +7,11 @@ const app = express()
 const port = process.env.PORT || 3000
 
 // schedule the scrape job to store link data to mongoDB
-cron.schedule("0 * * * *", () => {
+cron.schedule("* * * * *", () => {
     scrapingJob()
     //console.log("running scrape job every hour");
   });
-
+//setup routes
 app.use(express.json())
 
 app.listen(port, ()=> {

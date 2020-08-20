@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
 
-const Listing = mongoose.model('listings', {
+const listingSchema = new mongoose.Schema({
     url:{
         type: String,
         required:true,
@@ -22,8 +22,15 @@ const Listing = mongoose.model('listings', {
     coordinates: {
         type: Array,
         required:false
+    },
+    MLS:{
+        type:String,
+        unique:true,
+        required:true
     }
 
 })
+
+const Listing = mongoose.model('listings', listingSchema)
 
 module.exports = Listing

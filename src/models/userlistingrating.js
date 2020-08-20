@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const ObjectId = require('mongoose').Types.ObjectId;
 
-const ListingRating = mongoose.model('listing_ratings', {
+const listRatingSchema = new mongoose.Schema({
     userID: {
         type: ObjectId,
         required: true
@@ -16,5 +16,7 @@ const ListingRating = mongoose.model('listing_ratings', {
         required:true
     }
 })
+
+const ListingRating = mongoose.model('listing_ratings', listRatingSchema)
 
 module.exports = ListingRating
