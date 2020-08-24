@@ -2,9 +2,13 @@ const fs = require('fs');
 const path = require('path');
 const imaps = require('imap-simple');
 
-const getMessages = () => {
+
+const regex = /(https?:\/\/(.+?\.)?torontomls\.net(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?)/gm;
+
+const getMessages = (cb) => {
     const config = getCredentials();
-    console.log(config);
+
+    var parsedUrls = [];
 
     imaps.connect(config).then(function (connection) {        
         connection.openBox('INBOX').then(function () {
@@ -24,7 +28,14 @@ const getMessages = () => {
                             
                             //Display e-mail body
                             if (part.disposition == null && part.encoding != "base64"){
-                                console.log(partData);
+                                // console.log(partData);
+                                const parsedUrl = partData.match(regex);
+
+                                // check if email contains the URL
+                                if(parsedUrl && parsedUrl.length === 1) {
+                                    parsedUrls.push(parsedUrl[0])
+                                }
+                                
                             }
      
                             //Mark message for deletion
@@ -36,7 +47,7 @@ const getMessages = () => {
      
                             //     res(); //Final resolve
                             // })
-                            
+
                             // Don't do anything for now
                             res();
                         });
@@ -51,6 +62,7 @@ const getMessages = () => {
                     }
                 });
                 connection.end();
+                cb(parsedUrls);
             });
         });
     });
@@ -62,4 +74,10 @@ const getCredentials = () => {
     return({ imap: imapConfig});
 }
 
-getMessages();
+
+// Sample usage of retrieving URLs from mailbox
+getMessages((urls) => {
+    console.log(urls);
+});
+
+module.exports = getMessages;
