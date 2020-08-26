@@ -27,10 +27,21 @@ const listingSchema = new mongoose.Schema({
         type:String,
         unique:true,
         required:true
+    },
+    addedBy:{
+        type:mongoose.Schema.Types.ObjectId,
+        required:false, //listings are created by batch for now
+        ref: 'User'
     }
 
+}, {timestamps:true})
+
+listingSchema.virtual('Ratings', {
+    ref: 'Listing_Rating',
+    localField: '_id',
+    foreignField: 'listing'
 })
 
-const Listing = mongoose.model('listings', listingSchema)
+const Listing = mongoose.model('Listing', listingSchema)
 
 module.exports = Listing
