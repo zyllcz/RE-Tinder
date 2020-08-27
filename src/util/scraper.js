@@ -4,8 +4,9 @@ require('../db/mongoose')
 const Listing = require('../models/listing');
 const { model } = require('../models/listing');
 
-const url1 = 'http://v3.torontomls.net/Live/Pages/Public/Link.aspx?Key=00df01ca43e3426d91487697c76755b8&App=TREB#C4835471'; //multilist condo
+const url1 = 'http://v3.torontomls.net/Live/Pages/Public/Link.aspx?Key=85610d6dd6ac43da8cc256fd8e6bd7ce&App=TREB'; //multilist condo
 const url2 = 'http://v3.torontomls.net/Live/Pages/Public/Link.aspx?Key=a73e6e2779a54a9d8112dce842541694&App=TREB' //single listing house
+const url3 = 'http://v3.torontomls.net/Live/Pages/Public/Link.aspx?Key=85610d6dd6ac43da8cc256fd8e6bd7ce&App=TREB'
 
 const getListingData = (url) => {
 return new Promise((resolve, reject)=>{
@@ -98,7 +99,9 @@ const saveListing = async (url) => {
 //todo: call save listing for each link in mailbox
 //stub
 const scrapingJob = () =>{ 
+    saveListing(url1)
     saveListing(url2)
+    saveListing(url3)
     console.log('scraping job complete')
 }
 

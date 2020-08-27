@@ -19,8 +19,12 @@ const listingSchema = new mongoose.Schema({
         type:Array,
         required:false
     },
-    coordinates: {
-        type: Array,
+    longitude: {
+        type: Number,
+        required:false
+    },
+    latitude: {
+        type: Number,
         required:false
     },
     MLS:{
